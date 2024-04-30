@@ -1,0 +1,121 @@
+version: "3.9"
+services:
+  tucana-node1:
+    image: webbshi/tucana-base:v0.2.3
+    restart: always
+    container_name: 'tu-node1'
+    command: 'sh -c /home/startNode.sh'
+    ports:
+      - 26656:26656
+      - 26657:26657
+      - 1317:1317
+    volumes:
+      - ../networks/tucana-cluster/node1:/home/tucana-network/node
+      - ./startNode.sh:/home/startNode.sh
+    networks:
+      localnet:
+        ipv4_address: 192.167.0.2
+
+  tucana-node2:
+    image: webbshi/tucana-base:v0.2.3
+    restart: always
+    container_name: 'tu-node2'
+    command: 'sh -c /home/startNode.sh'
+    ports:
+      - 36656:26656
+      - 36657:26657
+      - 2317:1317
+    volumes:
+      - ../networks/tucana-cluster/node2:/home/tucana-network/node
+      - ./startNode.sh:/home/startNode.sh
+    networks:
+      localnet:
+        ipv4_address: 192.167.0.3
+
+  tucana-node3:
+    image: webbshi/tucana-base:v0.2.3
+    restart: always
+    container_name: 'tu-node3'
+    command: 'sh -c /home/startNode.sh'
+    ports:
+      - 46656:26656
+      - 46657:26657
+      - 3317:1317
+    volumes:
+      - ../networks/tucana-cluster/node3:/home/tucana-network/node
+      - ./startNode.sh:/home/startNode.sh
+    networks:
+      localnet:
+        ipv4_address: 192.167.0.4
+
+  tucana-node4:
+    image: webbshi/tucana-base:v0.2.3
+    restart: always
+    container_name: 'tu-node4'
+    command: 'sh -c /home/startNode.sh'
+    ports:
+      - 56656:26656
+      - 56657:26657
+      - 4317:1317
+    volumes:
+      - ../networks/tucana-cluster/node4:/home/tucana-network/node
+      - ./startNode.sh:/home/startNode.sh
+    networks:
+      localnet:
+        ipv4_address: 192.167.0.5
+
+  initia-full-node:
+    image: webbshi/initia-base:v0.2.0-beta.5
+    restart: always
+    container_name: 'node1'
+    #    environment:
+    #      NODE_STORE: '/home/celestia/full/'
+    #      NODE_TYPE: 'full'
+    command: 'sh -c /home/startNode.sh'
+    ports:
+      - 6657:26657
+      - 5317:1317
+    volumes:
+      - ../networks/initia-network:/home/initia-network
+      - ./startL1Node.sh:/home/startNode.sh
+    networks:
+      localnet:
+        ipv4_address: 192.167.0.6
+
+  hermes-relayer:
+    image: webbshi/hermes:latest
+    restart: always
+    container_name: 'relayer'
+    command: 'sh -c /home/startRelayer.sh'
+    environment:
+      L1_CHAIN_ID: '10000'
+      L2_CHAIN_ID: 'tucana-10001'
+    volumes:
+      - ../networks/relayer:/root/.hermes
+      - ./startRelayer.sh:/home/startRelayer.sh
+    networks:
+      localnet:
+        ipv4_address: 192.167.0.7
+
+
+  go-relayer:
+    container_name: gorelayer
+    restart: "no"
+    image: "webbshi/ibc-initia-relayer"
+    volumes:
+      - ../networks/go-relayer:/relayer
+#    command: 'sleep 1000'
+    command: 'sh /relayer/relayer-docker-run.sh'
+    networks:
+      localnet:
+        ipv4_address: 192.167.0.10
+
+
+
+networks:
+  localnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.167.0.0/24

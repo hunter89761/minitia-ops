@@ -1,0 +1,17 @@
+{
+  "type": "cosmos",
+  "value": {
+    "key": "validator1",
+    "chain-id": "tucana-10001",
+    "rpc-addr": "http://192.167.0.2:26657",
+    "account-prefix": "init",
+    "keyring-backend": "test",
+    "gas-adjustment": 1.2,
+    "gas-prices": "0.1utuc",
+    "min-gas-amount": 1,
+    "debug": true,
+    "timeout": "50s",
+    "output-format": "json",
+    "sign-mode": "direct"
+  }
+}
