@@ -1,0 +1,4 @@
+# start
+```
+./start-cluster.sh
+```
